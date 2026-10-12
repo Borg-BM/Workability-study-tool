@@ -1,0 +1,18 @@
+BM Workability Study Builder
+Copyright (c) Barge Master B.V.
+
+This product includes third-party open-source software.
+
+Document editor
+  @docx-editor.dev/core, @docx-editor.dev/react, @docx-editor.dev/fonts
+  (the "docx-editor" project, https://github.com/eigenpal/docx-editor)
+  Copyright 2026 EigenPal Inc.
+  Licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+  Used unmodified, as installed from the npm registry.
+  The fonts package also contains fonts under the SIL Open Font License 1.1 (Carlito, Caladea,
+  Liberation) and the GUST Font License (TeX Gyre Adventor).
+
+The full licence texts of the editor and of every other runtime dependency of the frontend are in
+public/third-party-licenses.txt. The application serves that file at /third-party-licenses.txt and links
+to it ("Open-source licences") from the study list and the study sidebar. Regenerate it with
+`node scripts/generate-licenses.mjs` whenever the dependencies change.

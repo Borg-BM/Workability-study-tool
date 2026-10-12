@@ -1,0 +1,40 @@
+# Workability Study Tool in Docker: `docker-up.cmd` builds and starts it, then open
+# http://localhost:8090 (or APP_PORT). See backend/README.md -> "Run it in Docker".
+name: workability-study-tool
+
+services:
+  backend:
+    build:
+      context: ./backend
+      additional_contexts:
+        # The PyBM package folder installed on this machine -- docker-up.cmd sets PYBM_DIR.
+        pybm: ${PYBM_DIR:-PYBM_DIR-not-set--build-with-docker-up.cmd}
+    image: workability-study-tool-backend
+    restart: unless-stopped
+    environment:
+      # Sign-in (backend/app/sso.py) -- all optional on this PC; see backend/README.md
+      # -> "Hosting on a server" for when they're needed.
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      AUTHENTIK_CLIENT_ID: ${AUTHENTIK_CLIENT_ID:-}
+      AUTHENTIK_CLIENT_SECRET: ${AUTHENTIK_CLIENT_SECRET:-}
+      SESSION_HOURS: ${SESSION_HOURS:-}
+      # Reviewers and admins: the members of these Authentik groups, read with a service
+      # account's API token (backend/app/roles.py). Put them in a .env file next to this one
+      # (gitignored); see backend/README.md -> "Reviewers and admins".
+      REVIEWER_GROUP: ${REVIEWER_GROUP:-}
+      ADMIN_GROUP: ${ADMIN_GROUP:-}
+      AUTHENTIK_API_TOKEN: ${AUTHENTIK_API_TOKEN:-}
+    volumes:
+      # Same studies/plots/reports as the native backend. Don't run both at once: SQLite
+      # locking doesn't hold across the Windows/container file-sharing boundary.
+      - ./backend/data:/app/data
+
+  frontend:
+    build: .
+    image: workability-study-tool-frontend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8090}:80"
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -1,0 +1,24 @@
+# Versions the Docker image installs -- the ones the native (Windows) setup runs, so a
+# calculation gives the same result in both. Update together with the native environment.
+copernicusmarine==2.4.1
+dask==2025.11.0
+fastapi==0.141.1
+geopy==2.5.0
+h5netcdf==1.8.1
+h5py==3.16.0
+matplotlib==3.10.9
+ndbc-api==0.26.7.25.2
+netCDF4==1.7.4
+numpy==2.3.5
+openpyxl==3.1.5
+pandas==2.3.3
+pydantic==2.13.5
+python-docx==1.2.0
+python-multipart==0.0.32
+requests==2.32.5
+scipy==1.16.3
+starlette==1.6.0
+sympy==1.14.0
+uvicorn==0.53.0
+xarray==2025.11.0
+xlrd==2.0.2

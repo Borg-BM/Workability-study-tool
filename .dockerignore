@@ -1,0 +1,10 @@
+# Allowlist: only what the frontend build needs (the backend has its own context, backend/).
+*
+!package.json
+!pnpm-lock.yaml
+!index.html
+!vite.config.ts
+!tsconfig.json
+!src/
+!public/
+!docker/nginx.conf
