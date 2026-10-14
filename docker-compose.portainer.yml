@@ -1,0 +1,38 @@
+# Portainer stack for the Workability Study Tool -- see DEPLOY.md.
+# Differs from docker-compose.yml: PyBM is read from a folder on the Docker host (PYBM_DIR),
+# and the data lives in a named volume instead of ./backend/data.
+name: workability-study-tool
+
+services:
+  backend:
+    build:
+      context: ./backend
+      additional_contexts:
+        # Absolute path on the Docker host to the PyBM package folder (the one containing
+        # __init__.py), e.g. /opt/pybm-src/PyBM
+        pybm: ${PYBM_DIR:?set PYBM_DIR to the PyBM folder on the Docker host}
+    image: workability-study-tool-backend
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: ${PUBLIC_URL:?set PUBLIC_URL, e.g. https://workability.app.barge-master.com}
+      AUTHENTIK_CLIENT_ID: ${AUTHENTIK_CLIENT_ID:-}
+      AUTHENTIK_CLIENT_SECRET: ${AUTHENTIK_CLIENT_SECRET:-}
+      SESSION_HOURS: ${SESSION_HOURS:-}
+      REVIEWER_GROUP: ${REVIEWER_GROUP:-workability-reviewers}
+      ADMIN_GROUP: ${ADMIN_GROUP:-workability-admins}
+      AUTHENTIK_API_TOKEN: ${AUTHENTIK_API_TOKEN:?set AUTHENTIK_API_TOKEN}
+    volumes:
+      - workability-data:/app/data
+
+  frontend:
+    build: .
+    image: workability-study-tool-frontend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8090}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  workability-data:
